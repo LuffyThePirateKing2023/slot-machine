@@ -33,7 +33,7 @@ def check_winnings(cols, lines, bet, value):
             if symbols != symbol_to_check:
                 break
         else: 
-            winnings += value[symbols] * bet
+            winnings += value(symbols) * bet
             winning_line.append(line + 1)   
 
     return winnings, winning_line
@@ -71,7 +71,7 @@ def print_slot_machine(columns):
 
 def deposit():
     while True:
-        amount = input("what amount would you like to Deposit? $ ")
+        amount = input("what would you like to? $ ")
         if amount.isdigit():
             amount = int(amount)
             if amount > 0:
@@ -97,7 +97,7 @@ def  get_number_of_lines():
 
 def get_bet():
     while True:
-        amount = input("How much would you like bet ? $ ")
+        amount = input("what would you like bet ? $ ")
         if amount.isdigit():
             amount = int(amount)
             if MIN_BET <= amount <= MAX_BET:
@@ -132,8 +132,11 @@ def game(balance):
     winnings, winning_lines = check_winnings(slots, lines, bet, SYMBOL_VALUE)
     print(f"You Won ${winnings}.")
     print(f"You won on line : ", * winning_lines)
-    balance -= total_bet
-    balance += winnings
+
+    if winnings > 0:
+        balance += winnings - total_bet
+    else:
+        balance -= total_bet
 
     return balance
 
@@ -145,7 +148,7 @@ def main():
         answer = input("Press Enter to play or q to Quit")
         if answer == "q":
             break
-        balance = game(balance)
+        balance += game(balance)
     print(f"Your balance left is : ${balance}")
 
 main()
